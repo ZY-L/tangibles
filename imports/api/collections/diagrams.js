@@ -81,8 +81,9 @@ if (Meteor.isServer) {
         update: function () {
             return false;
         },
+        //Update: Enable delete diagram function
         remove: function () {
-            return false;
+            return true;
         }
     });
 }
