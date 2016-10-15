@@ -32,7 +32,7 @@ Meteor.methods({
 
         if (isLibraryMine(libraryId)) {
             Libraries.update(libraryId, {
-                $set: {name: name},
+                $set: {name: name}
             });
         }
         else {

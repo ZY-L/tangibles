@@ -14,8 +14,22 @@ if (!Object.entries) {
     entries.shim();
 }
 
+
+defaultImageUrl = function () {
+    let rootUrl = __meteor_runtime_config__.ROOT_URL;
+    let imagePath = 'images/stamp.png';
+    let imageUrl = rootUrl;
+
+    if(rootUrl.substring(rootUrl.length-1) != "/")
+        imageUrl += '/' + imagePath;
+    else
+        imageUrl += imagePath;
+
+    return imageUrl;
+};
+
 Accounts.ui.config({
-    passwordSignupFields: 'USERNAME_ONLY',
+    passwordSignupFields: 'USERNAME_ONLY'
 });
 
 angular.module('tangibles', [angularMeteor, ngMaterial, 'ui.router', 'accounts.ui', home.name, diagram.name, libraries.name])
@@ -28,7 +42,7 @@ angular.module('tangibles', [angularMeteor, ngMaterial, 'ui.router', 'accounts.u
         "LIBRARIES": "Libraries",
         "LIBRARY": "Library",
         "DEFAULT_LIBRARY_ID": "M5q3SwPNcgCCKDWQL",
-        "DEFAULT_IMAGE_URL": __meteor_runtime_config__.ROOT_URL + 'images/stamp.png'
+        "DEFAULT_IMAGE_URL": defaultImageUrl()
     })
     .config(function ($mdThemingProvider, $mdIconProvider, $stateProvider, $urlRouterProvider, $const) {
         'ngInject';
