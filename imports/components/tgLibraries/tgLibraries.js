@@ -91,7 +91,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
 
             if(this.selectedTangible.tangible.scale == 0)
             {
-                scale = 0.0001;
+                scale = 0.5; 
             }
 
             let width = this.imageObj.naturalWidth * -scale;
@@ -273,7 +273,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
         let tangible = {"name": "Untitled",
             "icon": false,
             "scale": 1,
-            "startAngle": 90,
+            "startAngle": 0,
             "registrationPoints": []
         };
 
