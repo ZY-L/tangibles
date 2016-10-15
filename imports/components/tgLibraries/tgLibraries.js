@@ -13,7 +13,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
         'ngInject';
         super();
         $scope.viewModel(this);
-        this.touchWindow = 'Editable';
+        this.touchWindow = 'Editable'; //Update: Made touchWindow always Editable
         this.$scope = $scope;
         this.$meteor = $meteor;
         this.$scope = $scope;
