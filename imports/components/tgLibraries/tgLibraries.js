@@ -77,8 +77,10 @@ export class LibrariesCtrl extends AbstractTangibleController{
         //Update: Update visual feedback based on adding image
         if(this.points.length === 3 && this.shape !== undefined){
             document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+            document.getElementById("save").style.background = "#4caf50";
         }else{
             document.getElementById(this.containerID).style.border = "2px solid #DE6461";
+            document.getElementById("save").style.background = "#757575";
         }
 
         this.$scope.$watch('tgLibraries.selectedTangible.tangible.scale', function() {
@@ -324,8 +326,10 @@ export class LibrariesCtrl extends AbstractTangibleController{
         //Update: Load tangible panel with correct feedback visualizations
         if(this.points.length === 3 && this.imageObj.src.indexOf("stamp.png") === -1){
             document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+            document.getElementById("save").style.background = "#4caf50";
         }else{
             document.getElementById(this.containerID).style.border = "2px solid #DE6461";
+            document.getElementById("save").style.background = "#757575";
         }
 
     }
@@ -357,8 +361,10 @@ export class LibrariesCtrl extends AbstractTangibleController{
         //Update: Update visual feedback based on updating touch points
         if(this.points.length === 3 && this.imageObj.src.indexOf("stamp.png") === -1){
             document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+            document.getElementById("save").style.background = "#4caf50";
         }else{
             document.getElementById(this.containerID).style.border = "2px solid #DE6461";
+            document.getElementById("save").style.background = "#757575";
         }
 
         this.touchPointsLayer.destroyChildren(); //Remove old touch points
