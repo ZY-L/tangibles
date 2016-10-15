@@ -13,7 +13,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
         'ngInject';
         super();
         $scope.viewModel(this);
-        this.touchWindow = 'Uneditable';
+        this.touchWindow = 'Editable';
         this.$scope = $scope;
         this.$meteor = $meteor;
         this.$scope = $scope;
@@ -28,6 +28,8 @@ export class LibrariesCtrl extends AbstractTangibleController{
         this.selectedTangible = undefined;
         this.containerID = 'touchPointsContainer';
         this.image = undefined;
+        //Update: Made touch points global to check conditionals for feedback
+        this.points = undefined;
 
         this.imageObj = new Image();
         this.imageObj.onload = this.newImageLoaded.bind(this);
@@ -72,6 +74,13 @@ export class LibrariesCtrl extends AbstractTangibleController{
         this.imageLayer.add(this.shape);
         this.stage.draw();
 
+        //Update: Update visual feedback based on adding image
+        if(this.points.length === 3 && this.shape !== undefined){
+            document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+        }else{
+            document.getElementById(this.containerID).style.border = "2px solid #DE6461";
+        }
+
         this.$scope.$watch('tgLibraries.selectedTangible.tangible.scale', function() {
 
             let scale = 1;
@@ -105,6 +114,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
             this.shape.rotation(startAngle);
             this.stage.draw();
         }.bind(this), true);
+
     }
 
     editLibrary(library)
@@ -226,7 +236,11 @@ export class LibrariesCtrl extends AbstractTangibleController{
 
     saveTangible()
     {
-        if(this.selectedTangible.tangible.icon)
+        this.points = this.selectedTangible.tangible.registrationPoints;
+        //Update: Allow save only if correctly created tangible
+        if(this.points.length === 3 && this.imageObj.src.indexOf("stamp.png") === -1){
+            
+            if(this.selectedTangible.tangible.icon)
         {
             for (let [id, tangible] of Object.entries(this.selectedLibrary.tangibles)) {
                 if(id != this.selectedTangible.id) {
@@ -234,7 +248,7 @@ export class LibrariesCtrl extends AbstractTangibleController{
                 }
             }
         }
-
+        
         this.selectedLibrary.tangibles[this.selectedTangible.id] = this.selectedTangible.tangible;
         this.selectedLibrary.images[this.selectedTangible.id] = this.image;
 
@@ -249,6 +263,8 @@ export class LibrariesCtrl extends AbstractTangibleController{
  +        // Meteor.call("libraries.addTangible", this.selectedLibrary._id, this.selectedTangible.id,this.selectedTangible.tangible);
 
         SidenavCtrl.toggle('tangible-side-nav', this.$mdSidenav, this.$mdUtil)
+
+        }
     }
 
     addTangible()
@@ -283,26 +299,35 @@ export class LibrariesCtrl extends AbstractTangibleController{
     onTangibleLoaded()
     {
         this.onResize();
-        this.touchWindow = 'Uneditable';
 
         // Centre registration points and draw them
-        let points = this.selectedTangible.tangible.registrationPoints;
-
-        if(points.length > 0)
+        this.points = this.selectedTangible.tangible.registrationPoints;
+        if(this.points.length > 0)
         {
-            let curCentre = Points.getCentroid(points);
+            let curCentre = Points.getCentroid(this.points);
             let newCentre = {x: this.stage.getWidth()/2, y: this.stage.getHeight()/2};
             let offset = Point.subtract(newCentre, curCentre);
 
-            for(let i = 0; i < points.length; i++)
+            for(let i = 0; i < this.points.length; i++)
             {
-                points[i] = Point.add(points[i], offset);
+                this.points[i] = Point.add(this.points[i], offset);
             }
 
-            this.drawTouchPoints(points);
+            this.drawTouchPoints(this.points);
+        }else{
+            //Update: Reset touch panel so no touch points are drawn if no points stored
+            this.touchPointsLayer.destroyChildren();
         }
 
         this.imageObj.src = this.$tgImages.getTangibleImage(this.selectedTangible.id, this.selectedLibrary);
+
+        //Update: Load tangible panel with correct feedback visualizations
+        if(this.points.length === 3 && this.imageObj.src.indexOf("stamp.png") === -1){
+            document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+        }else{
+            document.getElementById(this.containerID).style.border = "2px solid #DE6461";
+        }
+
     }
 
     closeTangibleEditor()
@@ -325,14 +350,22 @@ export class LibrariesCtrl extends AbstractTangibleController{
     }
 
     onTouch(event) {
-        if (this.touchWindow == 'Editable') {
-            let touchPoints = this.toPoints(event.touches);
-            this.selectedTangible.tangible.registrationPoints = touchPoints;
-            this.touchPointsLayer.destroyChildren();
-            this.drawTouchPoints(touchPoints); //Visualise touch points
-            this.stage.draw();
+        let touchPoints = this.toPoints(event.touches);
+        this.selectedTangible.tangible.registrationPoints = touchPoints;
+        this.points = this.selectedTangible.tangible.registrationPoints;
+
+        //Update: Update visual feedback based on updating touch points
+        if(this.points.length === 3 && this.imageObj.src.indexOf("stamp.png") === -1){
+            document.getElementById(this.containerID).style.border = "2px solid #4caf50";
+        }else{
+            document.getElementById(this.containerID).style.border = "2px solid #DE6461";
         }
+
+        this.touchPointsLayer.destroyChildren(); //Remove old touch points
+        this.drawTouchPoints(touchPoints); //Visualise new touch points
+        this.stage.draw();
     }
+    
 }
 
 const name = 'tgLibraries';

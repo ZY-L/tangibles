@@ -146,7 +146,7 @@
 
                     <md-checkbox flex="50" style="margin-bottom: 0;"  ng-model="tgLibraries.selectedTangible.tangible.transparentHit"><p>Transparent hit</p></md-checkbox>
                 </div>
-
+                        <!--
                 <div layout>
                     <div flex="10" layout="row" layout-align="left center" style="margin-right: 10px;">
                         <p>Touch points</p>
@@ -160,13 +160,15 @@
                     </div>
                 </div>
 
+                <p id = "tp num">none</p>-->
+
                 <div id="touchPointsContainer"
-                     style="max-width: 100%; height: 500px; background-color: antiquewhite"></div>
+                     style="max-width: 100%; height: 500px; background-color: antiquewhite; overflow: hidden;"></div>
             </md-content>
 
             <div class="md-actions" layout="row">
                 <span flex></span>
-                <md-button ng-click="tgLibraries.saveTangible()" class="md-raised md-primary white">
+                <md-button ng-click="tgLibraries.saveTangible()" class="md-raised md-primary white" id = "save">
                     Save
                 </md-button>
                 <md-button ng-click="tgLibraries.closeTangibleEditor()" class="md-raised grey">
